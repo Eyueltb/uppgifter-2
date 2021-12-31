@@ -1,6 +1,6 @@
 import React from 'react'
 
-const Customer = ({customer, customers}) => {
+const Customer = ({customer}) => {
     return (
         <div className="card shadow" style={{maxWidth: 450 + 'px'}}>
             <div className="row g-0">
@@ -11,8 +11,7 @@ const Customer = ({customer, customers}) => {
                 <div className="card-body">
                     <h5 className="card-title">{customer.firstName} {customer.lastName}</h5>
                     <p className="card-text">{customer.email}</p>
-                    <p className="card-text">{customer.address.city}</p>
-                    <p className="card-text">{customer.address.state}</p>
+                    <p className="card-text">{customer.address.address}</p>
                     <p className="card-text">{customer.address.postalCode}</p>
                 </div>
                 </div>
