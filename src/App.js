@@ -1,31 +1,24 @@
-import React, {useState} from "react";
+import React from "react";
+import {BrowserRouter as Router, Route, Routes} from 'react-router-dom';
 import { CreateCustomer } from "./components/customers/CreateCustomer";
-import Customer from "./components/customers/Customer";
-import CustomerInfo from "./components/mock-data/CustomerInfo";
-
+import {ListCustomers} from './components/customers/ListCustomers'
+import {LandingPage} from './components/customers/LandingPage'
+import { NavBars } from "./components/navbar/NavBars";
 
 function App() {
- const [customers, setCustomers] = useState(CustomerInfo)
  
-
   return (
-    <div className="container mt-5">
-    <div className="row row-cols-1 row-cols-md-3 g-4">
-   
-    {
-      
-      customers.map(customer => (
-        <div key={customer.id} className="col">
-            
-            <Customer  customer={customer}  customers={setCustomers}/>
-        </div>
-      ))
-    }
-   
-  </div>
-  <CreateCustomer customers = {customers}  customersInfo = {setCustomers}/>
-</div>
-  );
+
+      <Router>
+      <NavBars/>
+      <Routes>
+        <Route exact path="/home" element={<LandingPage/>}> </Route>
+          <Route exact path="/list" element={<ListCustomers/>} >  </Route>
+          <Route exact path="/createCustomer" element={<CreateCustomer/>} >  </Route>
+        </Routes>
+      </Router>
+
+   );
 }
 
 export default App;
