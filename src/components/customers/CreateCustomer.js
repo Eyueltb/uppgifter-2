@@ -1,33 +1,79 @@
 import React, {useState} from 'react'
 import uuid from 'react-uuid';
+import CustomerInfo from "../mock-data/CustomerInfo";
+import Customer from "./Customer";
 
+const validMinValue = (value, minLength=2) => {
+    return value.length < minLength ? false : true;
+}
+const validEmail = (value) => {
+    const regEx = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return (!regEx.test(value)) ? false : true;
+}
+const validPostalCode = (value, RequiredLength=5) => {
+    return value.length === RequiredLength ? true : false;
+}
+const checkValidForm = (elements) => {
+    let disable = false
+    let errors = document.querySelectorAll('.is-invalid')
+    let submitButton = document.querySelectorAll('.submit')[0]
 
+    elements.forEach(element => {
+        if(element.value === "" || errors.length > 0)
+            disable = true
+    })
 
+    if(submitButton !== undefined)
+        submitButton.disabled = disable
+    return disable;
+}
+var forms = document.querySelectorAll('.needs-validation')
 export const CreateCustomer = ({customers, customerInfo}) => {
+
     const [firstName, setFirstName] = useState("");
     const [lastName, setLastName] = useState("");
     const [email, setEmail] = useState("");
     const [address, setAddress] = useState("");
     const [postalCode, setPostalCode] = useState("");
 
-    const firstNameHandler = (e) => { setFirstName(e.target.value) }
-    const lastNameHandler = (e) => { setLastName(e.target.value) }
-    const emailHandler = (e) => { setEmail(e.target.value) }
-    const addressHandler = (e) => { setAddress(e.target.value) }
-    const postalCodeHandler = (e) => { setPostalCode(e.target.value) }
+    const firstNameHandler = (e) => {
+        validateMinLength(e)
+        setFirstName(e.target.value)
+    }
+    const lastNameHandler = (e) => {
+        validateMinLength(e)
+        setLastName(e.target.value)
+    }
+    const emailHandler = (e) => {
+        validateEmail(e)
+        setEmail(e.target.value)
+    }
+    const addressHandler = (e) => {
+        validateMinLength(e)
+        setAddress(e.target.value)
+    }
+    const postalCodeHandler = (e) => {
+        validatePostalCode(e);
+        setPostalCode(e.target.value)
+    }
+
     const submitHandler = (e) => {
-        console.log("submitted")
         e.preventDefault()
 
         const customer = { id: uuid(), firstName : firstName, lastName : lastName, email : email, address : {address : address , postalCode : postalCode } }
-        customerInfo([...customers, customer])
-      
+
+
+        customers=[...customers,customer]
+        customerInfo(customers)
+        console.log(customer, customers, customerInfo)
         setFirstName('')
         setLastName('')
         setEmail('');
         setAddress('');
         setPostalCode('');
     }
+
+
     return (
         <div className="container d-flex justify-content-center mt-5">
         <div className="col-12 col-md-6">
@@ -64,6 +110,56 @@ export const CreateCustomer = ({customers, customerInfo}) => {
             </div>
         </form>
         </div>
+
+            <div className="container mt-5">
+                <div className="row row-cols-1 row-cols-md-3 g-4">
+                    {
+                        customers.map(customer => (
+                            <div key={customer.id} className="col">
+                                <Customer  customer={customer} />
+                            </div>
+                        ))
+                    }
+                </div>
+
+            </div>
       </div>
+
     )
+}
+
+const validateMinLength = (e)=> {
+    if (!validMinValue(e.target.value)) {
+        e.target.classList.add("is-invalid");
+        document.getElementById(`${e.target.id}-error`).style.display = "block";
+        checkValidForm(forms);
+    } else {
+        e.target.classList.remove("is-invalid");
+        document.getElementById(`${e.target.id}-error`).style.display = "none";
+        checkValidForm(forms);
+    }
+}
+
+const validateEmail = (e) => {
+    if (!validEmail(e.target.value)) {
+        e.target.classList.add("is-invalid");
+        document.getElementById(`${e.target.id}-error`).style.display = "block";
+        checkValidForm(forms);
+    } else {
+        e.target.classList.remove("is-invalid");
+        document.getElementById(`${e.target.id}-error`).style.display = "none";
+        checkValidForm(forms);
+    }
+}
+
+const validatePostalCode = (e) => {
+    if (!validPostalCode(e.target.value)) {
+        e.target.classList.add("is-invalid");
+        document.getElementById(`${e.target.id}-error`).style.display = "block";
+        checkValidForm(forms);
+    } else {
+        e.target.classList.remove("is-invalid");
+        document.getElementById(`${e.target.id}-error`).style.display = "none";
+        checkValidForm(forms);
+    }
 }

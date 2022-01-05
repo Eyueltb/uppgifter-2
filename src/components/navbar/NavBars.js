@@ -28,9 +28,7 @@ export const NavBars = () => {
                         <Grid>
                             <Link style={{textDecoration: 'none', color: 'inherit'}} to="/createCustomer"> Create Customer</Link> 
                         </Grid>
-                        <Grid>
-                            <Link style={{textDecoration: 'none', color: 'inherit'}} to="/list"> List Customer</Link> 
-                        </Grid>
+
                     </Grid>
                 </Toolbar>
             </AppBar>
